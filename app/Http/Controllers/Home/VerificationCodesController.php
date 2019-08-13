@@ -40,7 +40,12 @@ class VerificationCodesController extends Controller
         \Cache::put($key, ['phone' => $phone, 'code' => $code], $expiredAt);
 
         // return redirect()->route('registersteptwo')->with('key', $key)->with('success', '手机验证码已发送');
-        session()->flash('success', '手机验证码已发送');
+        if(!app()->environment('production')){
+            session()->flash('success', '手机验证码为1234');
+        }else{
+            session()->flash('success', '手机验证码已发送');
+        }
+
         return view('auth.registersteptwo')->with('key', $key);
     }
 
@@ -74,16 +79,26 @@ class VerificationCodesController extends Controller
           ], 201);
      }
 
-     public function register(PhoneRegisterRequest $request)
+     public function register(Request $request)
      {
 
          // 此方法有Bug.
-         // 在手机注册第二步，如果 PhoneRegisterRequest 有错误会返回第一步，并没在页面显示错误。
+         // 在手机注册第二步，如果上面写 PhoneRegisterRequest 有错误会返回第一步，并没在页面显示错误。
          // 或者返回 json ，暂不知如何处理为显示错误在页面上。
 
+         if($request->password != $request->password_confirmation){
+            return response()->json(['status' =>0, 'message'=> '两次密码输入不一致'], 422);
+         }
+
+         $result = User::where('name',$request->name)->get();
+         if($result->first()){
+            return response()->json(['status' =>0, 'message'=> '用户名已存在'], 422);
+         }
 
          // 获取刚刚缓存的验证码和key
          // key 放在页面的隐藏域里。
+
+
          $verifyData = \Cache::get($request->verification_key);
 
          //如果数据不存在，说明验证码已经失效。

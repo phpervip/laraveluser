@@ -88,13 +88,13 @@ class VerificationCodesController extends Controller
 
          //如果数据不存在，说明验证码已经失效。
          if(!$verifyData) {
-            session()->flash('success', '短信验证码已失效');
+            session()->flash('danger', '短信验证码已失效');
             return view('auth.registersteptwo')->with('key', $request->verification_key)->with('message', '短信验证码已失效');
          }
 
          // 检验前端传过来的验证码是否和缓存中的一致
          if (!hash_equals($verifyData['code'], $request->verification_code)) {
-            session()->flash('success', '短信验证码错误');
+            session()->flash('danger', '短信验证码错误');
             return view('auth.registersteptwo')->with('key', $request->verification_key);
          }
 

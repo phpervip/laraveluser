@@ -45,8 +45,11 @@ Route::post('registerstepone','Home\VerificationCodesController@store')->name('v
 Route::get('registersteptwo','Auth\RegisterController@showRegistrationFormStepTwo')->name('registersteptwo');
 Route::post('registersteptwo','Home\VerificationCodesController@register')->name('verificationCodes.register');
 
+// 个人中心
 
-Route::get('verificationCodes/ajaxregister','Home\VerificationCodesController@ajaxregister')->name('phoneajaxregister');
+Route::resource('users', 'UsersController', ['only' => ['show', 'update', 'edit']]);
+
+
 
 
 

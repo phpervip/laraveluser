@@ -8,7 +8,7 @@
 
   <div class="col-lg-3 col-md-3 hidden-sm hidden-xs user-info">
     <div class="card ">
-      <img class="card-img-top" src="{{ $user->avatar }}" alt="{{ $user->name }}">
+      <img class="card-img-top" src="{{ $user->avatar }}" alt="{{ $user->name }}" οnerrοr="this.src='http://laraveluser.yyii.info/uploads/images/avatars/201908/13/2_1565693480_FEzilyMfBu.png'">
       <div class="card-body">
             <h5><strong>个人简介</strong></h5>
             <p>{{ $user->introduction }}</p>

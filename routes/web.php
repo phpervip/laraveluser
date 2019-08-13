@@ -26,7 +26,7 @@ Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('re
 Route::post('register', 'Auth\RegisterController@register');
 
 // Password Reset Routes...
-    // 密码重置相关路由
+// 密码重置相关路由
 Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
 Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
 Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
@@ -38,6 +38,15 @@ Route::get('email/verify', 'Auth\VerificationController@show')->name('verificati
 Route::get('email/verify/{id}', 'Auth\VerificationController@verify')->name('verification.verify');
 Route::get('email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
+
+// 手机注册分两步
+Route::get('registerstepone','Auth\RegisterController@showRegistrationFormStepOne')->name('registerstepone');
+Route::post('registerstepone','Home\VerificationCodesController@store')->name('verificationCodes.store');
+Route::get('registersteptwo','Auth\RegisterController@showRegistrationFormStepTwo')->name('registersteptwo');
+Route::post('registersteptwo','Home\VerificationCodesController@register')->name('verificationCodes.register');
+
+
+Route::get('verificationCodes/ajaxregister','Home\VerificationCodesController@ajaxregister')->name('phoneajaxregister');
 
 
 

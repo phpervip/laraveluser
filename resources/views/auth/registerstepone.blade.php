@@ -6,17 +6,17 @@
         <div class="col-md-8">
                 <!-- 手机注册 -->
                 <div class="card">
-                <div class="card-header">手机{{ __('Register') }} 2-1 </div>
+                <div class="card-header">手机{{ __('Register') }}  第①步 </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('verificationCodes.store') }}">
                         @csrf
                         <div class="form-group row">
                             <label for="phone" class="col-md-4 col-form-label text-md-right">手机号码</label>
                             <div class="col-md-6">
-                                <input id="email" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
+                                <input id="phone" type="text" class="form-control @error('phone') is-invalid @enderror" name="phone" value="{{ old('phone') }}" required autocomplete="phone">
                                 @error('phone')
                                     <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
+                                        <strong>{{ $errors->first('phone') }}</strong>
                                     </span>
                                 @enderror
                             </div>

@@ -6,6 +6,9 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class PhoneRegisterRequest extends FormRequest
 {
+
+
+    protected $redirect = 'registersteptwo';
      /**
      * Determine if the user is authorized to make this request.
      *
@@ -42,4 +45,5 @@ class PhoneRegisterRequest extends FormRequest
             'password.confirmed'=> '两次密码输入不一致',
         ];
     }
+
 }

@@ -33,4 +33,12 @@ class VerificationCodeRequest extends FormRequest
         ];
     }
 
+    public function messages()
+    {
+        return [
+            'captcha.required' =>'验证码不能为空',
+            'captcha.captcha' => '验证码不正确',
+        ];
+    }
+
 }

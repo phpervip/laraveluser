@@ -47,13 +47,14 @@
         <form action="{{ route('users.bindphoneupdate', $user->id) }}" method="POST" accept-charset="UTF-8">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           @include('shared._error')
-          <div class="alert alert-danger" id="ajaxmessage">
-          </div>
+          <div class="alert alert-danger" id="ajaxerror"></div>
+          <div class="alert alert-success" id="ajaxsuccess"></div>
           <div class="form-group">
             <label for="phone-field">输入手机号</label>
             <div class="row col-md-12">
                 <input class="form-control col-md-8" type="text" name="phone" id="phone-field" value="18959165336" />
-                <button id="sendCode" type="button" class="btn btn-xs btn-default col-md-3 offset-md-1 text-primary">发送验证码</button>
+                <button id="sendCode" type="button" class="btn btn-xs btn-default col-md-3 offset-md-1 text-primary">发送验证码
+                </button>
             </div>
           </div>
           <div class="form-group">
@@ -62,7 +63,7 @@
                 <input class="form-control col-md-8" type="text" name="code" id="code-field" value="" />
             </div>
           </div>
-          <div class="form-group row" style="display:block;">
+          <div class="form-group row" style="display:none;">
              <label for="password-confirm" class="col-md-4 col-form-label text-md-right">key值</label>
                   <div class="col-md-6">
                       @if(isset($key))
@@ -85,8 +86,16 @@
 
 @section('scripts')
 <script>
-    $("#ajaxmessage").hide();
+    messagehide();
     $("#sendCode").click(function(){
+        // 如果此按钮class 中有disabled 则返回。
+        if ($("#sendCode").hasClass("disabled")){
+            console.log('btn sendCode disabled');
+            return false;
+        }else{
+            console.log('btn sendCode enabled');
+        }
+        messagehide();
         var phone = $('input[name="phone"]').val();
         console.log(phone);
         var url = '/phone/ajaxsend?phone='+ phone;
@@ -96,17 +105,38 @@
           data:{},
           dataType:'json',
           success:function(res){
-            $("#ajaxmessage").hide();
             console.log(res);
             $('input[name="verification_key"]').val(res.key);
+            $("#ajaxsuccess").show();
+            $('#ajaxsuccess').html(res.message);
+            // 发送后倒计时
+            $("#sendCode").html('重新发送(60s)');
+            $("#sendCode").addClass('disabled');
+            setTimeout(sendCodeEnable,60000);
+            setTimeout(closeMessage,5000);
           },
           error:function(res){
             var jsonResponse = JSON.parse(res.responseText);
             console.log(jsonResponse);
-            $("#ajaxmessage").show();
-            $('#ajaxmessage').html(jsonResponse.errors.phone[0]);
+            $("#ajaxerror").show();
+            $('#ajaxerror').html(jsonResponse.errors.phone[0]);
           },
         });
     });
+    function messagehide(){
+      $("#ajaxerror").hide();
+      $("#ajaxsuccess").hide();
+    }
+
+    function sendCodeEnable(){
+      $("#sendCode").removeClass('disabled');
+      $("#sendCode").html('发送验证码');
+    }
+
+    function closeMessage(){
+      $("#ajaxsuccess").hide();
+    }
+
+
 </script>
 @endsection

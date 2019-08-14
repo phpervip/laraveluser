@@ -116,9 +116,6 @@ class VerificationCodesController extends Controller
      // ajax 手机发送验证码
      public function ajaxsend(PhoneBindRequest $request, EasySms $easySms)
      {
-         // 这里不知如何用 PhoneBindRequest 返回错误到 绑定手机页面，暂时写成 json
-         // 验证手机号格式
-         // 验证是否已使用
           //获取前端ajax传过来的手机号
           $phone = $request->phone;
 

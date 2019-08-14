@@ -46,8 +46,17 @@ Route::get('registersteptwo','Auth\RegisterController@showRegistrationFormStepTw
 Route::post('registersteptwo','Home\VerificationCodesController@register')->name('verificationCodes.register');
 
 // 个人中心
+ Route::resource('users', 'UsersController', ['only' => ['show', 'update', 'edit']]);
+// Route::get('/users/{user}', 'UsersController@show')->name('users.show');
+// Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
+// Route::patch('/users/{user}', 'UsersController@update')->name('users.update');
 
-Route::resource('users', 'UsersController', ['only' => ['show', 'update', 'edit']]);
+// 帐号绑定
+Route::get('users/{user}/setbindsns','UsersController@setbindsns')->name('users.setbindsns');
+// 手机绑定
+Route::get('users/{user}/bindphone','UsersController@phoneshow')->name('users.bindphoneshow');
+Route::any('phone/ajaxsend', 'Home\VerificationCodesController@ajaxsend')->name('phone.ajaxsend');
+Route::post('users/{user}/bindphoneupdate','UsersController@phoneupdate')->name('users.bindphoneupdate');
 
 
 

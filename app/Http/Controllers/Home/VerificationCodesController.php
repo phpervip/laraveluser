@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Requests\Home\VerificationCodeRequest;
 use App\Http\Requests\Home\PhoneRegisterRequest;
+use App\Http\Requests\Home\PhoneBindRequest;
+use Auth;
 
 class VerificationCodesController extends Controller
 {
@@ -56,22 +58,22 @@ class VerificationCodesController extends Controller
           $phone = $request->phone;
           // 生成4位随机数，左侧补0
           $code = str_pad(random_int(1, 9999), 4, 0, STR_PAD_LEFT);
-
-          try {
-               $result = $easySms->send($mobile, [
+            // 真机发送
+            try {
+               $result = $easySms->send($phone, [
                     'content' => "【忆莲池】您的验证码是{$code}。如非本人操作，请忽略本短信"
                ]);
-          } catch (Overtrue\EasySms\Exceptions\NoGatewayAvailableException $exception) {
+            } catch (Overtrue\EasySms\Exceptions\NoGatewayAvailableException $exception) {
                $response = $exception->getExceptions();
                return response()->json($response);
-          }
+            }
 
           //生成一个不重复的key 用来搭配缓存cache判断是否过期
           $key = 'verificationCode_' . str_random(15);
           $expiredAt = now()->addMinutes(10);
 
           // 缓存验证码 10 分钟过期。
-          \Cache::put($key, ['mobile' => $mobile, 'code'=> $code], $expiredAt);
+          \Cache::put($key, ['phone' => $phone, 'code'=> $code], $expiredAt);
 
           return response()->json([
            'key' => $key,
@@ -109,8 +111,44 @@ class VerificationCodesController extends Controller
 
          return redirect()->route('login')->with('success', '注册成功！');
 
-    }
+     }
 
+     // ajax 手机发送验证码
+     public function ajaxsend(PhoneBindRequest $request, EasySms $easySms)
+     {
+         // 这里不知如何用 PhoneBindRequest 返回错误到 绑定手机页面，暂时写成 json
+         // 验证手机号格式
+         // 验证是否已使用
+          //获取前端ajax传过来的手机号
+          $phone = $request->phone;
+
+          // 生成4位随机数，左侧补0
+          $code = str_pad(random_int(1, 9999), 4, 0, STR_PAD_LEFT);
+
+          if(!app()->environment('production')){
+              // 非真机发送
+              $code  = '1234';
+          }else{
+              try {
+                   $result = $easySms->send($phone, [
+                        'content' => "【忆莲池】您的验证码是{$code}。如非本人操作，请忽略本短信"
+                   ]);
+              } catch (Overtrue\EasySms\Exceptions\NoGatewayAvailableException $exception) {
+                   $response = $exception->getExceptions();
+                   return response()->json($response);
+              }
+          }
+          //生成一个不重复的key 用来搭配缓存cache判断是否过期
+          $key = 'verificationCode_' . str_random(15);
+          $expiredAt = now()->addMinutes(10);
+          // 缓存验证码 10 分钟过期。
+          \Cache::put($key, ['phone' => $phone, 'code'=> $code], $expiredAt);
+          return response()->json([
+           'key'        => $key,
+           'expired_at' => $expiredAt->toDateTimeString(),
+           'message'    =>'发送成功'
+          ], 201);
+     }
 }
 
 

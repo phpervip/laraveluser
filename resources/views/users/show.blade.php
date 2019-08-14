@@ -17,6 +17,17 @@
             <p>{{ $user->created_at->diffForHumans() }}</p>
       </div>
     </div>
+    <div class="card ">
+    <ul class="nav nav-pills flex-column">
+        <li class="nav-item">
+          <a class="nav-link" href="{{route('users.setbindsns',Auth::user()->id)}}">帐号绑定</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ route('users.edit',$user->id) }}">编辑资料</a>
+        </li>
+
+      </ul>
+   </div>
   </div>
   <div class="col-lg-9 col-md-9 col-sm-12 col-xs-12">
     <div class="card ">

@@ -114,6 +114,7 @@
             $("#sendCode").addClass('disabled');
             setTimeout(sendCodeEnable,60000);
             setTimeout(closeMessage,5000);
+            // 倒计时：https://blog.csdn.net/I_am_listen/article/details/53056354
           },
           error:function(res){
             var jsonResponse = JSON.parse(res.responseText);

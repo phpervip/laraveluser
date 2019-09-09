@@ -11,7 +11,7 @@
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-一个邮箱或手机注册的Demo，用户名 / 邮箱 / 手机号，登录。
+一个邮箱或手机注册的Demo，用户名/邮箱/手机号，登录。
 
 注册后，邮件如果没找到，可能在垃圾箱。
 
